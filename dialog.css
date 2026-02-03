@@ -1,0 +1,154 @@
+.dialog {
+    background-color: rgb(196,38,52);
+    color: white;
+    border: none;
+    outline: none !important;
+    border-radius: 9%;
+    margin: auto;
+    padding: 0px;
+}
+
+.pokedex-top-img{
+    width: 100%;
+}
+
+.dialog-div {
+    width: 500px;
+    height: 750px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dialog-header {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+    font-size: 24px;
+
+}
+
+.dialog-grey-outline{
+    background-color: rgb(147,148,153);
+    flex-grow: 1;
+    margin-bottom: 48px;
+    width: calc(100% - 96px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 0 0 20px 20px;
+}
+
+.dialog-flex{
+    display: flex;
+}
+
+.dialog-pic{
+    height: 120px;
+    width: 240px;
+    background-color: white;
+    margin: 16px
+}
+
+.dialog-nav{
+    height: 120px;
+    width: 120px;
+    background-color: white;
+    margin: 16px
+}
+
+.dialog-content{
+    height: 300px;
+    width: calc(100% - 32px);
+    margin:0 16px;
+    background-color: white;
+}
+
+.close-button {
+    height: 36px;
+    width: 36px;
+    border-radius: 100%;
+    margin: 0;
+}
+
+.button-press {
+    background-color: #0D3240 !important;
+}
+
+.close-button:hover {
+    background-color: #6BC1E1;
+    cursor: pointer;
+}
+
+.dialog-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.dialog-footer {
+    display: flex;
+    width: 100%;
+    padding: 12px 36px;
+    box-sizing: border-box;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.dialog-footer-number {
+    min-width: 64px;
+    text-align: center;
+}
+
+.arrow {
+    height: 60px;
+    width: 60px;
+    border-radius: 100%;
+}
+
+.arrow:hover {
+    background-color: #372528;
+    cursor: pointer;
+}
+
+.left {
+    transform: rotate(180deg);
+}
+
+
+/* 
+@media (max-height:950px) {
+    .dialog-div {
+        height: 87vh;
+    }
+}
+
+@media (max-height:600px) {
+    dialog img {
+        height: 50vh;
+    }
+}
+
+
+@media (max-width:450px) {
+
+    .arrow {
+        height: 44px;
+        width: 44px;
+    }
+
+    .dialog-div {
+        max-height: 700px;
+    }
+
+    dialog img {
+        max-height: 400px;
+    }
+}
+
+@media (max-width:450px) {
+    .dialog-div {
+        max-height: 550px;
+    }
+} */

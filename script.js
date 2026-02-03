@@ -45,7 +45,8 @@ async function loadPokemon() {
                                              <p>${pokemonAPIAsJson.species.name.replace(/\b\w/g, letter => letter.toUpperCase())}</p>
                                              <p></p>
                                          </div>
-                                         <img src=${pokemonAPIAsJson.sprites.other["official-artwork"].front_default}></img>
+                                         <img class="pokemon-sprites" src=${pokemonAPIAsJson.sprites.other["official-artwork"].front_default}></img>
+                                         <img class="pokeball-background" src=./assets/pokeballbackground-removebg-preview.png></img>
                                             <div class="type-icon-div">
                                                 ${getTypesImage(types)}
                                             </div>
