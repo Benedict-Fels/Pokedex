@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="./assets/Logos/DA_Logo.png">
+    <script defer src="script.js"></script>
+</head>
+<body onload="loadPokemon(), loadAPI()">
+    <section class="pokemon-section">
+        <h1>Pokedex</h1>
+        <div id="content" class="content"></div>
+    </section>
+
+<button onclick="loadPokemon()">Show more</button>
+
+    <section>
+        <dialog id="dialogID" onclick="closeDialog()">
+            <div id="dialogDivID" class="dialog-div">
+                <div class="dialog-header">
+                    <p id="pokemonName"></p>
+                    <img id="closeButton" class="close-button" onmousedown="registerClickXButton()" onmouseup="closeDialog()" src="./assets/Logos/close-button.svg"
+                        alt="close dialog">
+                </div>
+                <div class="dialog-image">
+                    <img id="dialogImage">
+                </div>
+                <div class="dialog-footer">
+                    <img onclick="swipeLeft()" class="arrow left" src="./assets/Logos/arrow.svg" alt="Arrow Left">
+                    <p class="dialog-footer-number" id="dialogFooterNumberID"></p>
+                    <img onclick="swipeRight()" class="arrow" src="./assets/Logos/arrow.svg" alt="Arrow Right">
+                </div>
+            </div>
+        </dialog>
+    </section>
+    <footer>
+        <img class="DA-logo" src="./assets/Logos/DA_Logo.png" alt="Developer Akademie Logo">
+        <p>© 2023 Developer Akademie GmbH</p>
+    </footer>
+</body>
+</html>
