@@ -27,6 +27,8 @@ const closeButton = document.getElementById("closeButton");
 // dialogDiv.addEventListener('click', (event) => event.stopPropagation());
 
 const pokemonLocation = document.getElementById("content");
+const dialogContentRef = document.getElementById("dialog-contentID");
+let pokemonArray = []
 let currentNumberPokemon = 0;
 
 async function loadAPI() {
@@ -35,12 +37,16 @@ async function loadAPI() {
     console.log(pokemonAPIAsJson);
 }
 async function loadPokemon() {
-    for (let index = currentNumberPokemon+1; index < currentNumberPokemon+25; index++) {
+    document.body.classList.add('disable-interaction');
+    const pantomimeRef = document.getElementById('pantomimeID');
+    pantomimeRef.classList.remove("display-none");
+    for (let index = currentNumberPokemon + 1; index < currentNumberPokemon + 25; index++) {
         let pokemonAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`);
         let pokemonAPIAsJson = await pokemonAPI.json();
+        pokemonArray.push(pokemonAPIAsJson);
         let types = pokemonAPIAsJson.types;
         pokemonLocation.innerHTML += `<div id="pokemon${index}" class="pokemon-div" onclick="openDialog(${index})">
-                                         <div class="pokemon-overwiew">
+                                         <div class="pokemon-overview">
                                              <p>#${index}</p> 
                                              <p>${pokemonAPIAsJson.species.name.replace(/\b\w/g, letter => letter.toUpperCase())}</p>
                                              <p></p>
@@ -53,7 +59,9 @@ async function loadPokemon() {
                                          </div>`;
         getTypesBackground(types, index)
     }
-    return currentNumberPokemon += 24
+    pantomimeRef.classList.add("display-none");
+    document.body.classList.remove('disable-interaction');
+    return currentNumberPokemon += 24;
 }
 
 function getTypesImage(types) {
@@ -67,7 +75,7 @@ function getTypesImage(types) {
 function getTypesBackground(types, index) {
     const pokemonDivRef = document.getElementById(`pokemon${index}`)
     if (types.length > 1) {
-        pokemonDivRef.style.background = `linear-gradient(60deg,${assignColor(types[0].type.name)} 50%, ${assignColor(types[1].type.name)} 50%)`;
+        pokemonDivRef.style.background = `linear-gradient(32deg,${assignColor(types[0].type.name)} 53.2%, ${assignColor(types[1].type.name)} 53.2%)`;
     } else {
         pokemonDivRef.style.backgroundColor = `${assignColor(types[0].type.name)}`
     }
@@ -93,28 +101,53 @@ function assignColor(type) {
         case "dragon": return "rgb(80,97,225)";
         case "dark": return "rgb(80,65,63)";
         case "fairy": return "rgb(241,112,241)";
-
-
-
-        default:
     }
-
 }
 
-function openDialog() {
+function openDialog(i) {
     dialog.showModal();
     dialog.classList.add("dialog");
-    showDialogContent();
+    showDialogPic(i);
+    showDialogContent(i);
+    loadAbout(i);
+}
+
+function showDialogPic(i) {
+    const dialogPicRef = document.getElementById('dialogPicID')
+    dialogPicRef.innerHTML = `
+                        <img class="dialog-pokemon-sprites" src=${pokemonArray[i - 1].sprites.other["official-artwork"].front_default}></img>
+                        `
 }
 
 function showDialogContent() {
-    
+
 }
 
 function closeDialog() {
     dialog.close();
     dialog.classList.remove("dialog");
-    closeButton.classList.remove("button-press");
+    // closeButton.classList.remove("button-press");
+}
+
+function loadAbout(i) {
+    dialogContentRef.innerHTML = "";
+    pokemonArray[i - 1].stats.forEach(pokeStat => {
+        dialogContentRef.innerHTML += `
+        <div class="dialog-stat-div">
+            <p class="pokemon-stat-name">${pokeStat.stat.name}</p>
+            <p class="pokemon-stat-value">${pokeStat.base_stat}</p> 
+            <div class="stat-bar" style="background: linear-gradient(90deg, ${getStatColor(pokeStat.base_stat)} ${pokeStat.base_stat}%, #ccc ${pokeStat.base_stat}%)"></div>
+        </div>
+        `
+    });
+}
+
+function getStatColor(statValue) {
+    switch (true) {
+        case statValue <= 30: return "yellow";
+        case statValue >= 80: return "green";
+        default: return "blue";
+    }
 }
 
 // function registerClickXButton() {

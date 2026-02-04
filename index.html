@@ -12,12 +12,12 @@
 </head>
 
 <body onload="loadPokemon(), loadAPI()">
+    <h1>Pokedex</h1>
     <section class="pokemon-section">
-        <h1>Pokedex</h1>
         <div id="content" class="content"></div>
+        <button onclick="loadPokemon()">Show more</button>
+        <img id="pantomimeID" class="pantomime-loading display-none" src="./assets/pantomime.gif" alt="Pantomime GIF">
     </section>
-
-    <button onclick="loadPokemon()">Show more</button>
 
     <section>
         <dialog id="dialogID" onclick="closeDialog()">
@@ -30,10 +30,16 @@
                 </div>
                 <div class="dialog-grey-outline">
                     <div class="dialog-flex">
-                        <div class="dialog-pic"></div>
-                        <div class="dialog-nav"></div>
+                        <div id="dialogPicID" class="dialog-pic"></div>
+                        <div class="dialog-nav">
+                            <nav>
+                                <p>About</p>
+                                <p>Stats</p>
+                                <p>Evolution</p>
+                            </nav>
+                        </div>
                     </div>
-                    <div class="dialog-content"></div>
+                    <div id="dialog-contentID" class="dialog-content"></div>
                     <div class="dialog-footer">
                         <img onclick="swipeLeft()" class="arrow left" src="./assets/Logos/arrow.svg" alt="Arrow Left">
                         <p class="dialog-footer-number" id="dialogFooterNumberID"></p>
@@ -44,8 +50,6 @@
         </dialog>
     </section>
     <footer>
-        <img class="pokedex-top-img" src="./assets/pokedex_interface_template_wip_by_trustinlies_d4xlct4-375w-2x.jpg"
-            alt="pokedex top">
         <img class="DA-logo" src="./assets/Logos/DA_Logo.png" alt="Developer Akademie Logo">
         <p>© 2023 Developer Akademie GmbH</p>
     </footer>

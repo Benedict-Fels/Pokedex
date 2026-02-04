@@ -1,6 +1,5 @@
 .dialog {
-    background-color: rgb(196,38,52);
-    color: white;
+    background: linear-gradient(90deg,rgb(232,29,55) 20%, rgb(171,46,49) 80%);
     border: none;
     outline: none !important;
     border-radius: 9%;
@@ -48,7 +47,16 @@
     height: 120px;
     width: 240px;
     background-color: white;
-    margin: 16px
+    margin: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(none);
+}
+
+.dialog-pokemon-sprites{
+    height: 120px;
+    object-fit: contain;
 }
 
 .dialog-nav{
@@ -63,6 +71,28 @@
     width: calc(100% - 32px);
     margin:0 16px;
     background-color: white;
+}
+
+.dialog-stat-div{
+    display: flex;
+    margin: 8px;
+    width: calc(100%-16px);
+    align-items: center;
+}
+
+.pokemon-stat-name{
+    width: 120px;
+}
+
+.pokemon-stat-value{
+    padding:0 8px;
+}
+
+.stat-bar{
+    flex-grow: 1;
+    border: 1px solid black;
+    height: 10px;
+    background-color: blue;
 }
 
 .close-button {

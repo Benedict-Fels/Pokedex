@@ -3,37 +3,51 @@
 }
 
 body {
-    /* background-color: #06171E; */
-    background-color: rgb(179, 57, 38);
-    
-    font-family: "Figtree", sans-serif;
+    background-color: rgb(196,38,52);
     font-size: 16px;
+    color: white;
+}
+
+.pokemon-section{
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: white;
-    height: 100vh;
-    margin-bottom: 0;
-    flex-grow: 1;
+    background-color: white;
+    margin: 30px 60px;
 }
 
-.content{
-    background-color: white;
-    margin:30px 60px;
+.display-none{
+    display: none;
+}
+
+.disable-interaction {
+    pointer-events: none; 
+}
+
+.pantomime-loading{
+    position: fixed;
+    margin: auto;
+    height: 200px;
+    object-fit: contain;
+    z-index: 10;
+}
+
+.content {
     padding: 16px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-img{
+.pokemon-sprites {
     height: 120px;
     width: 120px;
     filter: drop-shadow(15px 15px 20px rgba(0, 0, 0, 0.9));
     margin: 8px;
+    z-index: 1;
 }
 
-.pokemon-div{
+.pokemon-div {
     height: 230px;
     width: 300px;
     margin: 12px;
@@ -43,33 +57,46 @@ img{
     position: relative;
     border-radius: 20px;
     border: 2px solid white;
+    position: relative;
 }
 
-.pokemon-overwiew{
+.pokeball-background {
+    position: absolute;
+    transform: rotate(-4deg);
+    bottom: 35px;
+    right: 30px;
+    scale: 1.5;
+    filter: invert(100%) grayscale(100%) brightness(200%);
+
+
+}
+
+.pokemon-overview {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     font-size: 24px;
-    font-weight: 500;
+    font-weight: 550;
     filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.9));
 }
 
-.type-icon-div{
+.type-icon-div {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
 }
 
-.type-icon{
+.type-icon {
     height: 28px;
     width: 120px;
     border: 2px solid white;
     border-radius: 30px;
+    filter: drop-shadow(5px 5px 20px rgba(0, 0, 0, 0.9));
 }
 
-button{
+button {
     padding: 4px;
     margin: 8px;
     margin-bottom: 36px;
@@ -103,94 +130,6 @@ h1 {
 }
 
 
-.dialog {
-    background-color: #09212A;
-    color: white;
-    border: none;
-    outline: none !important;
-    border-radius: 5%;
-    margin: auto;
-    padding: 0px;
-}
-
-.dialog-div {
-    width: 70w;
-    height: 77vh;
-    max-width: 1440px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.dialog-header {
-    display: flex;
-    width: 100%;
-    padding: 16px 24px;
-    padding-left: 36px;
-    box-sizing: border-box;
-    justify-content: space-between;
-    font-size: 24px;
-
-}
-
-.close-button {
-    height: 36px;
-    width: 36px;
-    border-radius: 100%;
-    margin: 0;
-}
-
-.button-press {
-    background-color: #0D3240 !important;
-}
-
-.close-button:hover {
-    background-color: #6BC1E1;
-    cursor: pointer;
-}
-
-dialog img {
-    width: 70vw;
-    height: 60vh;
-    object-fit: scale-down;
-    max-width: 98%;
-    margin: 0 16px;
-}
-
-.dialog-image {
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
-.dialog-footer {
-    display: flex;
-    width: 100%;
-    padding: 12px 36px;
-    box-sizing: border-box;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-.dialog-footer-number {
-    min-width: 64px;
-    text-align: center;
-}
-
-.arrow {
-    height: 60px;
-    width: 60px;
-    border-radius: 100%;
-}
-
-.arrow:hover {
-    background-color: #372528;
-    cursor: pointer;
-}
-
-.left {
-    transform: rotate(180deg);
-}
 
 
 footer {
@@ -211,17 +150,6 @@ footer p {
 }
 
 
-@media (max-height:950px) {
-    .dialog-div {
-        height: 87vh;
-    }
-}
-
-@media (max-height:600px) {
-    dialog img {
-        height: 50vh;
-    }
-}
 
 @media (max-width:800px) {
     .center-content {
@@ -248,24 +176,5 @@ footer p {
         margin-top: 30px;
         margin-bottom: 20px;
         font-size: 32px;
-    }
-
-    .arrow {
-        height: 44px;
-        width: 44px;
-    }
-
-    .dialog-div {
-        max-height: 700px;
-    }
-
-    dialog img {
-        max-height: 400px;
-    }
-}
-
-@media (max-width:450px) {
-    .dialog-div {
-        max-height: 550px;
     }
 }
