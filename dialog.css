@@ -57,6 +57,7 @@
 .dialog-pokemon-sprites {
     height: 120px;
     object-fit: contain;
+    filter: drop-shadow(15px 15px 20px rgba(0, 0, 0, 0.9));
 }
 
 .dialog-nav {
@@ -74,7 +75,7 @@
 .dialog-nav p {
     cursor: pointer;
     height: 23px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .dialog-nav p:hover {
@@ -94,6 +95,7 @@
     height: 300px;
     width: calc(100% - 32px);
     margin: 0 16px;
+    font-weight: 600;
     background-color: white;
 }
 

@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: rgb(196,38,52);
+    background: linear-gradient(90deg, rgb(232, 29, 55) 20%, rgb(171, 46, 49) 80%);
     font-size: 16px;
     color: white;
 }
@@ -37,6 +37,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    min-height:calc(100vh - 494px)
 }
 
 .pokemon-sprites {
@@ -67,8 +68,6 @@ body {
     right: 30px;
     scale: 1.5;
     filter: invert(100%) grayscale(100%) brightness(200%);
-
-
 }
 
 .pokemon-overview {
@@ -124,7 +123,7 @@ header {
 
 h1 {
     text-align: center;
-    margin-top: 120px;
+    margin-top: 60px;
     margin-bottom: 60px;
     font-size: 56px;
 }

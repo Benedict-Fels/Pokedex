@@ -69,7 +69,7 @@ async function loadPokemon() {
         let pokemonAPIAsJson = await pokemonAPI.json();
         let newPokemon = {
             id: index,
-            name: pokemonAPIAsJson.species.name.replace(/\b\w/g, letter => letter.toUpperCase()),
+            name: pokemonAPIAsJson.species.name,
             sprite: pokemonAPIAsJson.sprites.other["official-artwork"].front_default,
             types: pokemonAPIAsJson.types,
             stats: pokemonAPIAsJson.stats
@@ -79,7 +79,7 @@ async function loadPokemon() {
                                      <div id="pokemon${index}" class="pokemon-div" onclick="openDialog(${index})">
                                          <div class="pokemon-overview">
                                              <p>#${index}</p> 
-                                             <p>${newPokemon.name}</p>
+                                             <p>${newPokemon.name.replace(/\b\w/g, letter => letter.toUpperCase())}</p>
                                              <p></p>
                                          </div>
                                          <img class="pokemon-sprites" src=${newPokemon.sprite}></img>
@@ -91,7 +91,7 @@ async function loadPokemon() {
     }
     pokemonLocation.innerHTML += pokemons;
     let pokemon = Object.keys(pokemonObject);
-    pokemon.forEach(pokemon => getTypesBackground(pokemonObject[pokemon])); 
+    pokemon.forEach(pokemon => getTypesBackground(pokemonObject[pokemon]));
     pantomimeRef.classList.add("display-none");
     document.body.classList.remove('disable-interaction');
     currentNumberPokemon += 24;
@@ -166,8 +166,8 @@ function closeDialog() {
 
 function loadStats(pokemon) {
     statsRef.classList.add("red-underline");
+    dialogContentRef.innerHTML = "";
     pokemon.stats.forEach(pokeStat => {
-        dialogContentRef.innerHTML = "";
         dialogContentRef.innerHTML += `
         <div class="dialog-stat-div">
             <p class="pokemon-stat-name">${getStatName(pokeStat.stat.name)}</p>
@@ -194,6 +194,34 @@ function getStatColor(statValue) {
         case statValue >= 80: return "green";
         default: return "blue";
     }
+}
+
+loadEvolution(2);
+loadEvolution(4);
+loadEvolution(16);
+
+async function loadEvolution(index) {
+    let SpeciesAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${index}`)).json();
+    let EvoAPI = await (await fetch(`${SpeciesAPI.evolution_chain.url}`)).json();
+    console.log(`${index} evochain`, EvoAPI);
+    getEvolution(EvoAPI.chain);
+}
+
+function getEvolution(chain, pokemon = []) {
+    pokemon.push(cutOutIndex(chain.species.url));
+    if (chain.evolves_to.length > 0) {
+        getEvolution(chain.evolves_to[0], pokemon);
+    }
+    console.log('pokemon', pokemon);
+    return pokemon;
+}
+
+// Anwendung:
+// const names = extractEvolutions(pokemonEvoAPIAsJson.chain);
+// }
+
+function cutOutIndex(url) {
+    return url.slice(-2, -1);
 }
 
 // function registerClickXButton() {
