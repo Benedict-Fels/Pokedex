@@ -1,5 +1,5 @@
 .dialog {
-    background: linear-gradient(90deg,rgb(232,29,55) 20%, rgb(171,46,49) 80%);
+    background: linear-gradient(90deg, rgb(232, 29, 55) 20%, rgb(171, 46, 49) 80%);
     border: none;
     outline: none !important;
     border-radius: 9%;
@@ -7,7 +7,7 @@
     padding: 0px;
 }
 
-.pokedex-top-img{
+.pokedex-top-img {
     width: 100%;
 }
 
@@ -28,8 +28,8 @@
 
 }
 
-.dialog-grey-outline{
-    background-color: rgb(147,148,153);
+.dialog-grey-outline {
+    background-color: rgb(147, 148, 153);
     flex-grow: 1;
     margin-bottom: 48px;
     width: calc(100% - 96px);
@@ -39,11 +39,11 @@
     border-radius: 0 0 20px 20px;
 }
 
-.dialog-flex{
+.dialog-flex {
     display: flex;
 }
 
-.dialog-pic{
+.dialog-pic {
     height: 120px;
     width: 240px;
     background-color: white;
@@ -54,41 +54,67 @@
     filter: drop-shadow(none);
 }
 
-.dialog-pokemon-sprites{
+.dialog-pokemon-sprites {
     height: 120px;
     object-fit: contain;
 }
 
-.dialog-nav{
-    height: 120px;
-    width: 120px;
+.dialog-nav {
+    height: 104px;
+    width: 104px;
     background-color: white;
-    margin: 16px
+    margin: 16px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-size: 20px;
 }
 
-.dialog-content{
+.dialog-nav p {
+    cursor: pointer;
+    height: 23px;
+    font-weight: 500;
+}
+
+.dialog-nav p:hover {
+    text-decoration: underline rgb(171, 46, 49);
+    font-size: 18px;
+    font-weight: 600;
+    color: rgb(171, 46, 49);
+}
+
+.red-underline {
+    text-decoration: underline rgb(171, 46, 49);
+    font-weight: 600;
+    color: rgb(171, 46, 49);
+}
+
+.dialog-content {
     height: 300px;
     width: calc(100% - 32px);
-    margin:0 16px;
+    margin: 0 16px;
     background-color: white;
 }
 
-.dialog-stat-div{
+.dialog-stat-div {
     display: flex;
     margin: 8px;
     width: calc(100%-16px);
     align-items: center;
 }
 
-.pokemon-stat-name{
-    width: 120px;
+.pokemon-stat-name {
+    width: 66px;
 }
 
-.pokemon-stat-value{
-    padding:0 8px;
+.pokemon-stat-value {
+    padding: 0 8px;
+    box-sizing: border-box;
+    width: 44px;
 }
 
-.stat-bar{
+.stat-bar {
     flex-grow: 1;
     border: 1px solid black;
     height: 10px;

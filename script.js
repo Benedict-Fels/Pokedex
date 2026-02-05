@@ -1,41 +1,60 @@
-// async function fetchData(){
-//     const pokeAPI = await fetch('https://www.fruityvice.com/api/fruit/all');
-//     const pokeAPIAsJson = await pokeAPI.json();
-//     console.log(pokeAPIAsJson[5]);
-
-// renderSynonyms(pokeAPIAsJson);
-// }
-
-// function renderSynonyms(pokeAPIAsJson){
-//     const contentRef = document.getElementById('content');
-//     let terms = pokeAPIAsJson.synsets[0].terms;
-//     console.log(terms);
-// terms.forEach((arrayElement) => {
-//         const term = arrayElement.term;
-//         contentRef.innerHTML += `<p>${term}</p>`;
-//     })
-// }
-
 const dialog = document.getElementById("dialogID");
 const dialogName = document.getElementById("pokemonName");
 const dialogImage = document.getElementById("dialogImage");
 const dialogFooterNumber = document.getElementById("dialogFooterNumberID");
-// let currentIndex = 10;
+let currentIndex = 0;
 const closeButton = document.getElementById("closeButton");
 
-// const dialogDiv = document.getElementById('dialogDivID');
-// dialogDiv.addEventListener('click', (event) => event.stopPropagation());
+const dialogDiv = document.getElementById('dialogDivID');
+dialogDiv.addEventListener('click', (event) => event.stopPropagation());
 
 const pokemonLocation = document.getElementById("content");
 const dialogContentRef = document.getElementById("dialog-contentID");
+const statsRef = document.getElementById("statsID");
 let pokemonArray = []
 let currentNumberPokemon = 0;
 
 async function loadAPI() {
-    let pokemonAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/1`);
+    let pokemonAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/2`);
     let pokemonAPIAsJson = await pokemonAPI.json();
     console.log(pokemonAPIAsJson);
+    loadSpeciesAPI();
+    loadEvoAPI();
+    load108API();
+    loadSpecies108API();
+    loadEvo108API();
 }
+
+async function loadSpeciesAPI() {
+    let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/2/`);
+    let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
+    console.log("Species2", pokemonSpeciesAPIAsJson);
+}
+
+async function loadEvoAPI() {
+    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/1/`);
+    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
+    console.log("EvoChain2", pokemonEvoAPIAsJson);
+}
+
+async function load108API() {
+    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/108/`);
+    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
+    console.log("108", pokemonEvoAPIAsJson);
+}
+
+async function loadSpecies108API() {
+    let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/108/`);
+    let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
+    console.log("Species108", pokemonSpeciesAPIAsJson);
+}
+
+async function loadEvo108API() {
+    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/108/`);
+    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
+    console.log("EvoChain108", pokemonEvoAPIAsJson);
+}
+
 async function loadPokemon() {
     document.body.classList.add('disable-interaction');
     const pantomimeRef = document.getElementById('pantomimeID');
@@ -45,7 +64,8 @@ async function loadPokemon() {
         let pokemonAPIAsJson = await pokemonAPI.json();
         pokemonArray.push(pokemonAPIAsJson);
         let types = pokemonAPIAsJson.types;
-        pokemonLocation.innerHTML += `<div id="pokemon${index}" class="pokemon-div" onclick="openDialog(${index})">
+        pokemonLocation.innerHTML += `  
+                                     <div id="pokemon${index}" class="pokemon-div" onclick="openDialog(${index -1})">
                                          <div class="pokemon-overview">
                                              <p>#${index}</p> 
                                              <p>${pokemonAPIAsJson.species.name.replace(/\b\w/g, letter => letter.toUpperCase())}</p>
@@ -53,15 +73,15 @@ async function loadPokemon() {
                                          </div>
                                          <img class="pokemon-sprites" src=${pokemonAPIAsJson.sprites.other["official-artwork"].front_default}></img>
                                          <img class="pokeball-background" src=./assets/pokeballbackground-removebg-preview.png></img>
-                                            <div class="type-icon-div">
+                                         <div class="type-icon-div">
                                                 ${getTypesImage(types)}
-                                            </div>
-                                         </div>`;
+                                         </div>
+                                     </div>`;
         getTypesBackground(types, index)
     }
     pantomimeRef.classList.add("display-none");
     document.body.classList.remove('disable-interaction');
-    return currentNumberPokemon += 24;
+    currentNumberPokemon += 24;
 }
 
 function getTypesImage(types) {
@@ -105,22 +125,18 @@ function assignColor(type) {
 }
 
 function openDialog(i) {
+    currentIndex = i;
     dialog.showModal();
     dialog.classList.add("dialog");
     showDialogPic(i);
-    showDialogContent(i);
-    loadAbout(i);
+    loadStats(i);
 }
 
 function showDialogPic(i) {
     const dialogPicRef = document.getElementById('dialogPicID')
     dialogPicRef.innerHTML = `
-                        <img class="dialog-pokemon-sprites" src=${pokemonArray[i - 1].sprites.other["official-artwork"].front_default}></img>
+                        <img class="dialog-pokemon-sprites" src=${pokemonArray[i].sprites.other["official-artwork"].front_default}></img>
                         `
-}
-
-function showDialogContent() {
-
 }
 
 function closeDialog() {
@@ -129,17 +145,28 @@ function closeDialog() {
     // closeButton.classList.remove("button-press");
 }
 
-function loadAbout(i) {
+function loadStats(i) {
+    statsRef.classList.add("red-underline")
     dialogContentRef.innerHTML = "";
-    pokemonArray[i - 1].stats.forEach(pokeStat => {
+    pokemonArray[i].stats.forEach(pokeStat => {
         dialogContentRef.innerHTML += `
         <div class="dialog-stat-div">
-            <p class="pokemon-stat-name">${pokeStat.stat.name}</p>
+            <p class="pokemon-stat-name">${getStatName(pokeStat.stat.name)}</p>
             <p class="pokemon-stat-value">${pokeStat.base_stat}</p> 
             <div class="stat-bar" style="background: linear-gradient(90deg, ${getStatColor(pokeStat.base_stat)} ${pokeStat.base_stat}%, #ccc ${pokeStat.base_stat}%)"></div>
         </div>
         `
     });
+}
+
+function getStatName(name) {
+    let Name = name.charAt(0).toUpperCase() + name.slice(1);
+    switch (Name) {
+        case "Hp": return "HP";
+        case "Special-attack": return "Sp. Atk";
+        case "Special-defense": return "Sp. Def";
+        default: return Name;
+    }
 }
 
 function getStatColor(statValue) {
@@ -154,19 +181,17 @@ function getStatColor(statValue) {
 //     closeButton.classList.add("button-press");
 // }
 
-// document.addEventListener('keydown', function (event) {
-//     if (event.key === 'Escape') {
-//         closeDialog();
-//     }
-//     if (event.key === 'ArrowLeft') {
-//         swipeLeft();
-//     }
-//     if (event.key === 'ArrowRight') {
-//         swipeRight();
-//     }
-
-
-// })
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        closeDialog();
+    }
+    if (event.key === 'ArrowLeft') {
+        swipeLeft();
+    }
+    if (event.key === 'ArrowRight') {
+        swipeRight();
+    }
+})
 
 // function displayPic(picIndex) {
 //     dialogImage.src = `./img/${photos[picIndex]}`;
@@ -177,23 +202,17 @@ function getStatColor(statValue) {
 
 // }
 
-// function swipeLeft() {
-//     if (currentIndex == 0) {
-//         displayPic(photos.length - 1)
-//     }
-//     else {
-//         currentIndex -= 1;
-//         displayPic(currentIndex);
-//     }
-// }
+function swipeLeft() {
+    currentIndex -= 1;
+    showDialogPic(currentIndex);
+    loadStats(currentIndex);
+}
 
-
-// function swipeRight() {
-//     if (currentIndex == 19) {
-//         displayPic(0)
-//     }
-//     else {
-//         currentIndex += 1;
-//         displayPic(currentIndex);
-//     }
-// }
+async function swipeRight() {
+    if (currentNumberPokemon -1 == currentIndex) {
+     await loadPokemon();
+    }
+    currentIndex += 1;
+    showDialogPic(currentIndex);
+    loadStats(currentIndex);
+}

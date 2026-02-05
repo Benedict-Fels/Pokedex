@@ -50,13 +50,13 @@ body {
 .pokemon-div {
     height: 230px;
     width: 300px;
-    margin: 12px;
+    margin: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     border-radius: 20px;
-    border: 2px solid white;
+    border: 6px solid rgb(147,148,153);
     position: relative;
 }
 
