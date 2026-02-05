@@ -11,10 +11,14 @@ dialogDiv.addEventListener('click', (event) => event.stopPropagation());
 const pokemonLocation = document.getElementById("content");
 const dialogContentRef = document.getElementById("dialog-contentID");
 const statsRef = document.getElementById("statsID");
-let pokemonArray = []
+let pokemonArray = [];
+let pokemonObject = {};
 let currentNumberPokemon = 0;
 
 async function loadAPI() {
+    let pokemonFullAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/`);
+    let pokemonFullAPIAsJson = await pokemonFullAPI.json();
+    console.log("Full", pokemonFullAPIAsJson);
     let pokemonAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/2`);
     let pokemonAPIAsJson = await pokemonAPI.json();
     console.log(pokemonAPIAsJson);
@@ -59,26 +63,35 @@ async function loadPokemon() {
     document.body.classList.add('disable-interaction');
     const pantomimeRef = document.getElementById('pantomimeID');
     pantomimeRef.classList.remove("display-none");
+    let pokemons = "";
     for (let index = currentNumberPokemon + 1; index < currentNumberPokemon + 25; index++) {
         let pokemonAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`);
         let pokemonAPIAsJson = await pokemonAPI.json();
-        pokemonArray.push(pokemonAPIAsJson);
-        let types = pokemonAPIAsJson.types;
-        pokemonLocation.innerHTML += `  
-                                     <div id="pokemon${index}" class="pokemon-div" onclick="openDialog(${index -1})">
+        let newPokemon = {
+            id: index,
+            name: pokemonAPIAsJson.species.name.replace(/\b\w/g, letter => letter.toUpperCase()),
+            sprite: pokemonAPIAsJson.sprites.other["official-artwork"].front_default,
+            types: pokemonAPIAsJson.types,
+            stats: pokemonAPIAsJson.stats
+        };
+        pokemonObject[index] = newPokemon;
+        pokemons += `  
+                                     <div id="pokemon${index}" class="pokemon-div" onclick="openDialog(${index})">
                                          <div class="pokemon-overview">
                                              <p>#${index}</p> 
-                                             <p>${pokemonAPIAsJson.species.name.replace(/\b\w/g, letter => letter.toUpperCase())}</p>
+                                             <p>${newPokemon.name}</p>
                                              <p></p>
                                          </div>
-                                         <img class="pokemon-sprites" src=${pokemonAPIAsJson.sprites.other["official-artwork"].front_default}></img>
+                                         <img class="pokemon-sprites" src=${newPokemon.sprite}></img>
                                          <img class="pokeball-background" src=./assets/pokeballbackground-removebg-preview.png></img>
                                          <div class="type-icon-div">
-                                                ${getTypesImage(types)}
+                                                ${getTypesImage(newPokemon.types)}
                                          </div>
-                                     </div>`;
-        getTypesBackground(types, index)
+                                     </div>`
     }
+    pokemonLocation.innerHTML += pokemons;
+    let pokemon = Object.keys(pokemonObject);
+    pokemon.forEach(pokemon => getTypesBackground(pokemonObject[pokemon])); 
     pantomimeRef.classList.add("display-none");
     document.body.classList.remove('disable-interaction');
     currentNumberPokemon += 24;
@@ -92,12 +105,12 @@ function getTypesImage(types) {
     return typesImg;
 }
 
-function getTypesBackground(types, index) {
-    const pokemonDivRef = document.getElementById(`pokemon${index}`)
-    if (types.length > 1) {
-        pokemonDivRef.style.background = `linear-gradient(32deg,${assignColor(types[0].type.name)} 53.2%, ${assignColor(types[1].type.name)} 53.2%)`;
+function getTypesBackground(pokemon) {
+    const pokemonDivRef = document.getElementById(`pokemon${pokemon.id}`)
+    if (pokemon.types.length > 1) {
+        pokemonDivRef.style.background = `linear-gradient(32deg,${assignColor(pokemon.types[0].type.name)} 53.2%, ${assignColor(pokemon.types[1].type.name)} 53.2%)`;
     } else {
-        pokemonDivRef.style.backgroundColor = `${assignColor(types[0].type.name)}`
+        pokemonDivRef.style.backgroundColor = `${assignColor(pokemon.types[0].type.name)}`;
     }
 }
 
@@ -128,14 +141,20 @@ function openDialog(i) {
     currentIndex = i;
     dialog.showModal();
     dialog.classList.add("dialog");
-    showDialogPic(i);
-    loadStats(i);
+    showDialogPic(pokemonObject[i]);
+    loadStats(pokemonObject[i]);
 }
 
-function showDialogPic(i) {
+function showDialogPic(pokemon) {
     const dialogPicRef = document.getElementById('dialogPicID')
+    if (pokemon.types.length > 1) {
+        dialogPicRef.style.background = `linear-gradient(28deg,${assignColor(pokemon.types[0].type.name)} 50%, ${assignColor(pokemon.types[1].type.name)} 50%)`;
+    } else {
+        dialogPicRef.style.background = "";
+        dialogPicRef.style.backgroundColor = `${assignColor(pokemon.types[0].type.name)}`
+    }
     dialogPicRef.innerHTML = `
-                        <img class="dialog-pokemon-sprites" src=${pokemonArray[i].sprites.other["official-artwork"].front_default}></img>
+                        <img class="dialog-pokemon-sprites" src=${pokemon.sprite}></img>
                         `
 }
 
@@ -145,10 +164,10 @@ function closeDialog() {
     // closeButton.classList.remove("button-press");
 }
 
-function loadStats(i) {
-    statsRef.classList.add("red-underline")
-    dialogContentRef.innerHTML = "";
-    pokemonArray[i].stats.forEach(pokeStat => {
+function loadStats(pokemon) {
+    statsRef.classList.add("red-underline");
+    pokemon.stats.forEach(pokeStat => {
+        dialogContentRef.innerHTML = "";
         dialogContentRef.innerHTML += `
         <div class="dialog-stat-div">
             <p class="pokemon-stat-name">${getStatName(pokeStat.stat.name)}</p>
@@ -204,15 +223,15 @@ document.addEventListener('keydown', function (event) {
 
 function swipeLeft() {
     currentIndex -= 1;
-    showDialogPic(currentIndex);
-    loadStats(currentIndex);
+    showDialogPic(pokemonObject[currentIndex]);
+    loadStats(pokemonObject[currentIndex]);
 }
 
 async function swipeRight() {
-    if (currentNumberPokemon -1 == currentIndex) {
-     await loadPokemon();
+    if (currentNumberPokemon - 1 == currentIndex) {
+        await loadPokemon();
     }
     currentIndex += 1;
-    showDialogPic(currentIndex);
-    loadStats(currentIndex);
+    showDialogPic(pokemonObject[currentIndex]);
+    loadStats(pokemonObject[currentIndex]);
 }
