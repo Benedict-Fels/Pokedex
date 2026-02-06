@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="dialog.css">
     <link rel="icon" type="image/x-icon" href="./assets/Logos/DA_Logo.png">
     <script defer src="script.js"></script>
+    <script defer src="template.js"></script>
 </head>
 
 <body onload="loadPokemon(), loadAPI()">
@@ -23,10 +24,10 @@
         <dialog id="dialogID" onclick="closeDialog()">
             <div id="dialogDivID" class="dialog-div">
                 <div class="dialog-header">
-                    <img class="pokedex-top-img" src="./assets/pokedex-full-top-without-edge-removebg-preview.png"
-                        alt="pokedex top">
-                    <!-- <img id="closeButton" class="close-button" onmousedown="registerClickXButton()" onmouseup="closeDialog()" src="./assets/Logos/close-button.svg"
-                        alt="close dialog"> -->
+                    <img class="pokedex-top-img" src="./assets/pokedex-full-top-without-edge-removebg-preview.png" alt="pokedex top">
+                    <img id="closeButton" class="close-button" onmousedown="registerClickXButton()" onmouseup="closeDialog()" src="./assets/Logos/close-button.svg" alt="close dialog">
+                    <p class="dialog-poke-name" id="dialogpokeNameID"></p>
+                    <div class="dialog-types-div" id="dialog-pokemon-typesID"> </div>
                 </div>
                 <div class="dialog-grey-outline">
                     <div class="dialog-flex">
@@ -34,14 +35,14 @@
                         <nav class="dialog-nav">
                             <p id="statsID">Stats</p>
                             <p id="aboutID">About</p>
-                            <p id="evolutionID">Evolution</p>
+                            <p id="evolutionID" onclick="getEvolution()">Evolution</p>
                         </nav>
                     </div>
                     <div id="dialog-contentID" class="dialog-content"></div>
                     <div class="dialog-footer">
-                        <img onclick="swipeLeft()" class="arrow left" src="./assets/Logos/arrow.svg" alt="Arrow Left">
+                        <img onclick="swipeLeft()" class="arrow left" src="./assets/Logos/right_arrow.svg" alt="Arrow Left">
                         <p class="dialog-footer-number" id="dialogFooterNumberID"></p>
-                        <img onclick="swipeRight()" class="arrow" src="./assets/Logos/arrow.svg" alt="Arrow Right">
+                        <img onclick="swipeRight()" class="arrow" src="./assets/Logos/right_arrow.svg" alt="Arrow Right">
                     </div>
                 </div>
             </div>

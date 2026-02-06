@@ -14,10 +14,11 @@ body {
     align-items: center;
     background-color: white;
     margin: 30px 60px;
+    min-height:calc(100vh - 378px);
 }
 
 .display-none{
-    display: none;
+    display: none !important;
 }
 
 .disable-interaction {
@@ -27,6 +28,7 @@ body {
 .pantomime-loading{
     position: fixed;
     margin: auto;
+    padding-top: 100px;
     height: 200px;
     object-fit: contain;
     z-index: 10;
@@ -37,7 +39,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    min-height:calc(100vh - 494px)
+    
 }
 
 .pokemon-sprites {
