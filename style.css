@@ -8,6 +8,11 @@ body {
     color: white;
 }
 
+header {
+    background: linear-gradient(90deg, rgb(232, 29, 55) 20%, rgb(171, 46, 49) 80%);
+    padding-top: 36px;
+}
+
 .pokemon-section{
     display: flex;
     flex-direction: column;

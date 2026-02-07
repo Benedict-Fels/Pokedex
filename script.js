@@ -59,39 +59,44 @@ async function loadEvo134API() {
     console.log("EvoChainEevee", pokemonEvoAPIAsJson);
 }
 
-async function loadPokemon() {
+async function getMorePokemon() {
+    let myIndex = currentNumberPokemon
+    for (let index = myIndex + 1; index < myIndex + 25; index++) {
+      await getPokemon(index)
+    }
+}
+
+async function getPokemon(index) {
+    await fetchPokemon(index);
+    await loadPokemon(index);
+    
+}
+
+async function loadPokemon(index) {
     document.body.classList.add('disable-interaction');
     const pantomimeRef = document.getElementById('pantomimeID');
     pokemonLocation.classList.add("display-none");
     pantomimeRef.classList.remove("display-none");
-    let pokemons = "";
-    for (let index = currentNumberPokemon + 1; index < currentNumberPokemon + 25; index++) {
-        await fetchPokemon(index);
-        pokemons += pokemonTemplate(pokemonObject[index], index);
-    }
-    pokemonLocation.innerHTML += pokemons;
-    let pokemon = Object.keys(pokemonObject);
-    pokemon.forEach(pokemon => getTypesBackground(pokemonObject[pokemon]));
+    pokemonLocation.innerHTML += pokemonTemplate(pokemonObject[index], index);
+    getTypesBackground(pokemonObject[index]);
     pantomimeRef.classList.add("display-none");
     pokemonLocation.classList.remove("display-none");
     document.body.classList.remove('disable-interaction');
-    currentNumberPokemon += 24;
+    currentNumberPokemon += 1;
 }
 
 async function fetchPokemon(index) {
     let pokemonAPIAsJson = await (await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)).json();
+    let pokemonSpeciesAPIAsJson = await (await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)).json();
     let newPokemon = {
         id: index,
         name: pokemonAPIAsJson.species.name,
+        // flavorText: pokemonSpeciesAPIAsJson.fl
         sprite: pokemonAPIAsJson.sprites.other["official-artwork"].front_default,
         types: pokemonAPIAsJson.types,
         stats: pokemonAPIAsJson.stats
     };
     pokemonObject[index] = newPokemon;
-}
-
-function stringToCapital(string) {
-    return string.replace(/\b\w/g, letter => letter.toUpperCase())
 }
 
 function getTypesImage(types) {
@@ -108,29 +113,6 @@ function getTypesBackground(pokemon) {
         pokemonDivRef.style.background = `linear-gradient(32deg,${assignColor(pokemon.types[0].type.name)} 53.2%, ${assignColor(pokemon.types[1].type.name)} 53.2%)`;
     } else {
         pokemonDivRef.style.backgroundColor = `${assignColor(pokemon.types[0].type.name)}`;
-    }
-}
-
-function assignColor(type) {
-    switch (type) {
-        case "normal": return "rgb(159,161,159)";
-        case "fighting": return "rgb(255,128,0)";
-        case "flying": return "rgb(129,185,239)";
-        case "poison": return "rgb(144,64,204)";
-        case "ground": return "rgb(145,81,33)";
-        case "rock": return "rgb(175,169,129)";
-        case "bug": return "rgb(145,161,25)";
-        case "ghost": return "rgb(112,65,112)";
-        case "steel": return "rgb(96,161,184)";
-        case "fire": return "rgb(230,40,41)";
-        case "water": return "rgb(41,128,239)";
-        case "grass": return "rgb(66,161,41)";
-        case "electric": return "rgb(250,192,0)";
-        case "psychic": return "rgb(241,65,121)";
-        case "ice": return "rgb(63,216,255)";
-        case "dragon": return "rgb(80,97,225)";
-        case "dark": return "rgb(80,65,63)";
-        case "fairy": return "rgb(241,112,241)";
     }
 }
 
@@ -163,19 +145,6 @@ function showDialogPic(pokemon) {
     dialogPicRef.innerHTML = `
                         <img class="dialog-pokemon-sprites" title="${stringToCapital(pokemon.name)}" src=${pokemon.sprite}></img>
                         `
-    // if (pokemon.types.length > 1) {
-    //     dialogPicRef.innerHTML += `
-    //                      <div class="dialog-types-div">
-    //                          <img class="small-type" title="${stringToCapital(pokemon.types[0].type.name)}" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${pokemon.types[0].type.name}.svg">
-    //                          <img class="small-type" title="${stringToCapital(pokemon.types[1].type.name)}" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${pokemon.types[1].type.name}.svg">
-    //                      </div>`
-    // } else {
-    //     dialogPicRef.innerHTML += `
-    //      <div class="dialog-type-div">
-    //          <img class="small-type" title="${stringToCapital(pokemon.types[0].type.name)}" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${pokemon.types[0].type.name}.svg">
-    //      </div>
-    //     `
-    // }
 }
 
 function closeDialog() {
@@ -184,8 +153,21 @@ function closeDialog() {
     // closeButton.classList.remove("button-press");
 }
 
+function loadDescription(pokemon) {
+    const description = pokemon.flavor_text_entries.find(entry =>
+        entry.language.name === 'en' && entry.version.name === 'scarlet' || entry.version.name === 'violet'
+    );
+
+    // const fallbackEntry = SpeciesAPI.flavor_text_entries.find(entry => 
+    //     entry.language.name === 'en'
+    // );
+
+    const finalDescription = (scarletEntry || fallbackEntry).flavor_text.replace(/[\n\f\r]/g, " ");
+}
+
 function loadStats(pokemon) {
     statsRef.classList.add("red-underline");
+    dialogContentRef.classList.remove('evo-content')
     dialogContentRef.innerHTML = "";
     pokemon.stats.forEach(pokeStat => {
         dialogContentRef.innerHTML += `
@@ -196,25 +178,6 @@ function loadStats(pokemon) {
         </div>
         `
     });
-}
-
-function getStatName(name) {
-    switch (name) {
-        case "hp": return "HP";
-        case "special-attack": return "Sp. Atk";
-        case "special-defense": return "Sp. Def";
-        default: return name.charAt(0).toUpperCase() + name.slice(1);
-    }
-}
-
-function getStatColor(statValue) {
-    switch (true) {
-        case (statValue / 150) * 100 <= 20: return "rgb(255, 60, 60)";
-        case (statValue / 150) * 100 <= 40: return "rgb(255, 150, 50)";
-        case (statValue / 150) * 100 <= 60: return "rgb(255, 210, 0)";
-        case (statValue / 150) * 100 <= 80: return "rgb(160, 230, 50)";
-        case (statValue / 150) * 100 > 80: return "rgb(0, 200, 100)";
-    }
 }
 
 function loadEvolution() {
@@ -232,23 +195,22 @@ function loadEvolution() {
 
         return html;
     }).join('');
-    dialogContentRef.classList.add('evo-content')
+    dialogContentRef.classList.add('evo-content');
 }
 
 async function getEvolution() {
     let SpeciesAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIndex}/`)).json();
     let EvoAPI = await (await fetch(`${SpeciesAPI.evolution_chain.url}`)).json();
     let evoArray = getEvoArray(EvoAPI.chain);
-    for (const pokemon of evoArray){
-    // evoArray.forEach(pokemon => {
+    for (const pokemon of evoArray) {
+        // evoArray.forEach(pokemon => {
         if (!pokemonObject[pokemon.id]) {
-          await fetchPokemon(pokemon.id);
+            await fetchPokemon(pokemon.id);
         }
         pokemonObject[pokemon.id].evoChain = evoArray;
     };
     loadEvolution();
 }
-
 
 function getEvoArray(chain, pokemonIDs = []) {
     let currentStep = {
@@ -262,11 +224,6 @@ function getEvoArray(chain, pokemonIDs = []) {
         getEvoArray(chain.evolves_to[0], pokemonIDs);
     }
     return pokemonIDs;
-}
-
-function cutOutIndex(url) {
-    const parts = url.split('/');
-    return parts[parts.length - 2];
 }
 
 // function registerClickXButton() {
@@ -295,7 +252,7 @@ function swipeLeft() {
 
 async function swipeRight() {
     if (currentNumberPokemon - 1 == currentIndex) {
-        await loadPokemon();
+        getMorePokemon();
     }
     currentIndex += 1;
     loadPokeName(pokemonObject[currentIndex]);

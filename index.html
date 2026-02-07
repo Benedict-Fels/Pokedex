@@ -9,14 +9,17 @@
     <link rel="stylesheet" href="dialog.css">
     <link rel="icon" type="image/x-icon" href="./assets/Logos/DA_Logo.png">
     <script defer src="script.js"></script>
+    <script defer src="modify.js"></script>
     <script defer src="template.js"></script>
 </head>
 
-<body onload="loadPokemon(), loadAPI()">
-    <h1>Pokedex</h1>
+<body onload="getMorePokemon(), loadAPI()">
+    <header>
+        <img class="pokedex-logo" src="./assets/Logos/Pokédex_logo.png" alt="Pokedex logo">
+    </header>
     <section class="pokemon-section">
         <div id="content" class="content"></div>
-        <button onclick="loadPokemon()">Show more</button>
+        <button onclick="getMorePokemon()">Show more</button>
         <img id="pantomimeID" class="pantomime-loading display-none" src="./assets/pantomime.gif" alt="Pantomime GIF">
     </section>
 
