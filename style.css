@@ -11,6 +11,7 @@ body {
 header {
     background: linear-gradient(90deg, rgb(232, 29, 55) 20%, rgb(171, 46, 49) 80%);
     padding-top: 36px;
+    padding-bottom: 4px;
 }
 
 .pokemon-section{
@@ -57,7 +58,7 @@ header {
 
 .pokemon-div {
     height: 230px;
-    width: 300px;
+    width: 284px;
     margin: 4px;
     display: flex;
     flex-direction: column;

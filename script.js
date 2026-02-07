@@ -60,41 +60,45 @@ async function loadEvo134API() {
 }
 
 async function getMorePokemon() {
+    document.body.classList.add('disable-interaction');
+    const pantomimeRef = document.getElementById('pantomimeID');
+    pokemonLocation.classList.add("display-none");
+    pantomimeRef.classList.remove("display-none");
     let myIndex = currentNumberPokemon
     for (let index = myIndex + 1; index < myIndex + 25; index++) {
-      await getPokemon(index)
+        await getPokemon(index)
     }
+    pantomimeRef.classList.add("display-none");
+    pokemonLocation.classList.remove("display-none");
+    document.body.classList.remove('disable-interaction');
 }
 
 async function getPokemon(index) {
     await fetchPokemon(index);
     await loadPokemon(index);
-    
 }
 
 async function loadPokemon(index) {
-    document.body.classList.add('disable-interaction');
-    const pantomimeRef = document.getElementById('pantomimeID');
-    pokemonLocation.classList.add("display-none");
-    pantomimeRef.classList.remove("display-none");
+
     pokemonLocation.innerHTML += pokemonTemplate(pokemonObject[index], index);
     getTypesBackground(pokemonObject[index]);
-    pantomimeRef.classList.add("display-none");
-    pokemonLocation.classList.remove("display-none");
-    document.body.classList.remove('disable-interaction');
+
     currentNumberPokemon += 1;
 }
 
 async function fetchPokemon(index) {
-    let pokemonAPIAsJson = await (await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)).json();
-    let pokemonSpeciesAPIAsJson = await (await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)).json();
+    let pokemonAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)).json();
+
+    // let pokemonSpeciesAPIAsJson = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${index}`)).json();
     let newPokemon = {
         id: index,
-        name: pokemonAPIAsJson.species.name,
-        // flavorText: pokemonSpeciesAPIAsJson.fl
-        sprite: pokemonAPIAsJson.sprites.other["official-artwork"].front_default,
-        types: pokemonAPIAsJson.types,
-        stats: pokemonAPIAsJson.stats
+        name: pokemonAPI.species.name,
+        // flavorText: getDescription(pokemonSpeciesAPIAsJson.flavor_text_entries),
+        sprite: pokemonAPI.sprites.other["official-artwork"].front_default,
+        types: pokemonAPI.types,
+        stats: pokemonAPI.stats,
+        abilitiesURL: pokemonAPI.abilities,
+        // abilities: abilitiesData
     };
     pokemonObject[index] = newPokemon;
 }
@@ -118,12 +122,13 @@ function getTypesBackground(pokemon) {
 
 function openDialog(i) {
     currentIndex = i;
+    // getDialogData();
     dialog.showModal();
     dialog.classList.add("dialog");
     loadPokeName(pokemonObject[i]);
     showDialogTypes(pokemonObject[i])
     showDialogPic(pokemonObject[i]);
-    loadStats(pokemonObject[i]);
+    loadStats();
 }
 
 function loadPokeName(pokemon) {
@@ -153,23 +158,53 @@ function closeDialog() {
     // closeButton.classList.remove("button-press");
 }
 
-function loadDescription(pokemon) {
-    const description = pokemon.flavor_text_entries.find(entry =>
+function getDescription(flavor_text_entries) {
+    const description = flavor_text_entries.find(entry =>
         entry.language.name === 'en' && entry.version.name === 'scarlet' || entry.version.name === 'violet'
     );
+    const fallbackEntry = flavor_text_entries.find(entry =>
+        entry.language.name === 'en'
+    );
 
-    // const fallbackEntry = SpeciesAPI.flavor_text_entries.find(entry => 
-    //     entry.language.name === 'en'
-    // );
-
-    const finalDescription = (scarletEntry || fallbackEntry).flavor_text.replace(/[\n\f\r]/g, " ");
+    const finalDescription = (description || fallbackEntry).flavor_text.replace(/[\n\f\r]/g, " ");
+    return finalDescription;
 }
 
-function loadStats(pokemon) {
+function loadDescription() {
+    let pokemon = pokemonObject[currentIndex];
+    dialogContentRef.innerHTML += `<p>Description:</p>
+                                   <p>${pokemon.flavorText}</p>
+    `
+}
+
+function loadAbilities() {
+    let pokemon = pokemonObject[currentIndex];
+    let html = `<p>Abilities:</p>` + pokemon.abilities.map(pokeAbility => `
+                            <p>${stringToCapital(pokeAbility.abilityName)}: ${pokeAbility.abilityDescription}</p>
+                            `
+    ).join('');
+    dialogContentRef.innerHTML += html
+}
+
+async function getAbilities() {
+    let abilitiesData = [];
+    for (const abilitySlot of pokemonObject[currentIndex].abilitiesURL) {
+        let abilityAPI = await (await fetch(`${abilitySlot.ability.url}`)).json();
+        let effectEntry = abilityAPI.effect_entries.find(entry => entry.language.name === 'en');
+        let abilityDetail = {
+            abilityName: abilitySlot.ability.name,
+            abilityDescription: effectEntry ? effectEntry.short_effect : "No description available"
+        };
+        abilitiesData.push(abilityDetail);
+    }
+    pokemonObject[currentIndex].abilities = abilitiesData;
+}
+
+function loadStats() {
     statsRef.classList.add("red-underline");
     dialogContentRef.classList.remove('evo-content')
     dialogContentRef.innerHTML = "";
-    pokemon.stats.forEach(pokeStat => {
+    pokemonObject[currentIndex].stats.forEach(pokeStat => {
         dialogContentRef.innerHTML += `
         <div class="dialog-stat-div">
             <p class="pokemon-stat-name">${getStatName(pokeStat.stat.name)}</p>
@@ -178,6 +213,22 @@ function loadStats(pokemon) {
         </div>
         `
     });
+}
+
+async function aboutClick() {
+    await getAbilities();
+    await getDialogData();
+    dialogContentRef.innerHTML = "";
+    dialogContentRef.classList.remove('evo-content');
+    dialogContentRef.classList.add('about-content')
+    loadDescription();
+    loadAbilities()
+}
+
+async function evolutionClick() {
+    dialogContentRef.innerHTML = `<div class="loader">Loading evolution...</div>`;
+    await getDialogData();
+    loadEvolution();
 }
 
 function loadEvolution() {
@@ -198,18 +249,19 @@ function loadEvolution() {
     dialogContentRef.classList.add('evo-content');
 }
 
-async function getEvolution() {
-    let SpeciesAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIndex}/`)).json();
-    let EvoAPI = await (await fetch(`${SpeciesAPI.evolution_chain.url}`)).json();
-    let evoArray = getEvoArray(EvoAPI.chain);
-    for (const pokemon of evoArray) {
-        // evoArray.forEach(pokemon => {
-        if (!pokemonObject[pokemon.id]) {
-            await fetchPokemon(pokemon.id);
-        }
-        pokemonObject[pokemon.id].evoChain = evoArray;
-    };
-    loadEvolution();
+async function getDialogData() {
+    if (!pokemonObject[currentIndex].evoChain || !pokemonObject[currentIndex].flavorText) {
+        let speciesAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIndex}/`)).json();
+        let evoAPI = await (await fetch(`${speciesAPI.evolution_chain.url}`)).json();
+        pokemonObject[currentIndex].flavorText = getDescription(speciesAPI.flavor_text_entries);
+        let evoArray = getEvoArray(evoAPI.chain);
+        for (const pokemon of evoArray) {
+            if (!pokemonObject[pokemon.id]) {
+                await fetchPokemon(pokemon.id);
+            }
+            pokemonObject[pokemon.id].evoChain = evoArray;
+        };
+    }
 }
 
 function getEvoArray(chain, pokemonIDs = []) {
@@ -244,10 +296,11 @@ document.addEventListener('keydown', function (event) {
 
 function swipeLeft() {
     currentIndex -= 1;
+    // getDialogData();
     loadPokeName(pokemonObject[currentIndex]);
     showDialogTypes(pokemonObject[currentIndex]);
     showDialogPic(pokemonObject[currentIndex]);
-    loadStats(pokemonObject[currentIndex]);
+    loadStats();
 }
 
 async function swipeRight() {
@@ -255,8 +308,9 @@ async function swipeRight() {
         getMorePokemon();
     }
     currentIndex += 1;
+    // getDialogData();
     loadPokeName(pokemonObject[currentIndex]);
     showDialogTypes(pokemonObject[currentIndex]);
     showDialogPic(pokemonObject[currentIndex]);
-    loadStats(pokemonObject[currentIndex]);
+    loadStats();
 }
