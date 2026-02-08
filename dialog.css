@@ -233,8 +233,8 @@ padding: 6px;
     border-radius: 100%;
 }
 
-.arrow:hover {
-    background-color: #372528;
+.arrow path:hover {
+    fill: darkred;
     cursor: pointer;
 }
 

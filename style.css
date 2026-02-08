@@ -12,6 +12,25 @@ header {
     background: linear-gradient(90deg, rgb(232, 29, 55) 20%, rgb(171, 46, 49) 80%);
     padding-top: 36px;
     padding-bottom: 4px;
+    position: relative;
+}
+
+input{
+    height: 36px;
+    width: 160px;
+    position: absolute;
+    right: 60px;
+    bottom: 0;
+    border: 3px solid rgb(147,148,153);
+    border-radius: 10px;
+}
+
+.magnifying-glass{
+    position: absolute;
+    right: 70px;
+    bottom: 6px;
+    height: 28px;
+    object-fit: contain;
 }
 
 .pokemon-section{
