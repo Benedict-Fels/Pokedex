@@ -146,6 +146,13 @@
     color: rgb(171, 46, 49);
 }
 
+h2{
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: underline;
+    margin: 8px;
+}
+
 .dialog-content {
     /* height: 280px; */
     flex-grow: 1;

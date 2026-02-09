@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="dialog.css">
     <link rel="icon" type="image/x-icon" href="./assets/Logos/DA_Logo.png">
     <script defer src="script.js"></script>
+    <script defer src="dialog.js"></script>
     <script defer src="modify.js"></script>
     <script defer src="template.js"></script>
 </head>
@@ -16,7 +17,7 @@
 <body onload="getMorePokemon(), preloadSearchList()">
     <header>
         <img class="pokedex-logo" src="./assets/Logos/Pokédex_logo.png" alt="Pokedex logo">
-        <input id="inputID" onabort="loadCurrentPokemon()" oninput="searchPokemon(this.value)" type="text" placeholder="  Search..."><img class="magnifying-glass" src="./assets/magnifying-glass.png" alt="search icon"></input>
+        <input id="inputID" onabort="loadCurrentPokemon()" oninput="searchPokemon(this.value)" type="text" placeholder="Search..."><img class="magnifying-glass" src="./assets/magnifying-glass.png" alt="search icon"></input>
     </header>
     <section class="pokemon-section">
         <div id="content" class="content"></div>
@@ -46,7 +47,7 @@
                     </div>
                     <div id="dialog-contentID" class="dialog-content"></div>
                     <div class="dialog-footer">
-                        <svg class="arrow left" xmlns="http://www.w3.org/2000/svg"
+                        <svg id="left-arrow" class="arrow left" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1"
                             viewBox="0 0 512.003 512.003" xml:space="preserve">
                             <path onclick="swipeLeft()"

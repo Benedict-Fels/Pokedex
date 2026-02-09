@@ -21,6 +21,7 @@ input{
     position: absolute;
     right: 60px;
     bottom: 0;
+    padding-left: 12px;
     border: 3px solid rgb(147,148,153);
     border-radius: 10px;
 }
@@ -67,6 +68,10 @@ input{
     
 }
 
+.black{
+    color: black;
+}
+
 .pokemon-sprites {
     height: 120px;
     width: 120px;
@@ -86,6 +91,10 @@ input{
     border-radius: 20px;
     border: 6px solid rgb(147,148,153);
     position: relative;
+}
+
+.pokemon-div:hover{
+    scale: 1.05;
 }
 
 .pokeball-background {
