@@ -22,17 +22,21 @@ let searchArray = [];
 //     loadEvo134API();
 // }
 
-// async function loadSpeciesAPI() {
-//     let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/10202/`);
-//     let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
-//     console.log("Species10202", pokemonSpeciesAPIAsJson);
-// }
+async function loadSpeciesAPI() {
+    let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/133`);
+    let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
+    console.log("Species133", pokemonSpeciesAPIAsJson);
+    loadEvoAPI();
+    loadSpecies134API();
+    loadEvo14API();
+    loadEvo10API();
+}
 
-// async function loadEvoAPI() {
-//     let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/10/`);
-//     let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-//     console.log("EvoChain10", pokemonEvoAPIAsJson);
-// }
+async function loadEvoAPI() {
+    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/67/`);
+    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
+    console.log("EvoChainEevee", pokemonEvoAPIAsJson);
+}
 
 // async function load134API() {
 //     let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/30/`);
@@ -40,17 +44,23 @@ let searchArray = [];
 //     console.log("30", pokemonEvoAPIAsJson);
 // }
 
-// async function loadSpecies134API() {
-//     let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/35/`);
-//     let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
-//     console.log("Species35", pokemonSpeciesAPIAsJson);
-// }
+async function loadSpecies134API() {
+    let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/113/`);
+    let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
+    console.log("Species113", pokemonSpeciesAPIAsJson);
+}
 
-// async function loadEvo14API() {
-//     let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/14/`);
-//     let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-//     console.log("EvoChain14", pokemonEvoAPIAsJson);
-// }
+async function loadEvo14API() {
+    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/51/`);
+    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
+    console.log("EvoChain51", pokemonEvoAPIAsJson);
+}
+
+async function loadEvo10API() {
+    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/10/`);
+    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
+    console.log("EvoChain510", pokemonEvoAPIAsJson);
+}
 
 // async function loadEvo134API() {
 //     let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/67/`);
@@ -158,5 +168,3 @@ function getTypesBackground(pokemon) {
         pokemonDivRef.style.backgroundColor = `${assignColor(pokemon.types[0].type.name)}`;
     }
 }
-
-

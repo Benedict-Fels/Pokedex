@@ -3,28 +3,29 @@ const dialogDiv = document.getElementById('dialogDivID');
 dialogDiv.addEventListener('click', (event) => event.stopPropagation());
 
 let currentIndex = 0;
-let currentSearchIndex = 0;
+// let currentSearchIndex = 0;
 
 function openDialog(i) {
     if (searchState) {
-        currentSearchIndex = searchArray.indexOf(i)
+        currentIndex = searchArray.indexOf(i);
+    } else {
+        currentIndex = i;
     }
-    currentIndex = i;
-    if (currentIndex == 1) {
+    if (i == 1 || searchArray.indexOf(i) == 0) {
         document.getElementById('left-arrow').style.visibility = "hidden";
     } else {
         document.getElementById('left-arrow').style.visibility = "visible";
     }
     dialog.showModal();
     dialog.classList.add("dialog");
-    loadDialog(pokemonObject[i])
+    loadDialog(pokemonObject[i]);
 }
 
 function loadDialog(pokemon) {
     showPokeName(pokemon);
     showDialogTypes(pokemon)
     showDialogPic(pokemon);
-    showStats();
+    showStats(pokemon);
 }
 
 function showPokeName(pokemon) {
@@ -65,15 +66,15 @@ function getDescription(flavor_text_entries) {
     return finalDescription;
 }
 
-function loadDescription() {
-    let pokemon = pokemonObject[currentIndex];
+function loadDescription(ID) {
+    let pokemon = pokemonObject[ID];
     dialogContentRef.innerHTML += `<h2>Description:</h2>
                                    <p>${pokemon.flavorText}</p>
     `
 }
 
-function loadAbilities() {
-    let pokemon = pokemonObject[currentIndex];
+function loadAbilities(ID) {
+    let pokemon = pokemonObject[ID];
     let html = `<h2>Abilities:</h2> <ul>`
         + pokemon.abilities.map(pokeAbility => `
                             <li>${stringToCapital(pokeAbility.abilityName)}: ${pokeAbility.abilityDescription}</li>
@@ -82,10 +83,10 @@ function loadAbilities() {
     dialogContentRef.innerHTML += html
 }
 
-async function getAbilities() {
-    if (!pokemonObject[currentIndex].abilities) {
+async function getAbilities(ID) {
+    if (!pokemonObject[ID].abilities) {
         let abilitiesData = [];
-        for (const abilitySlot of pokemonObject[currentIndex].abilitiesURL) {
+        for (const abilitySlot of pokemonObject[ID].abilitiesURL) {
             let abilityAPI = await (await fetch(`${abilitySlot.ability.url}`)).json();
             let effectEntry = abilityAPI.effect_entries.find(entry => entry.language.name === 'en');
             let abilityDetail = {
@@ -94,15 +95,14 @@ async function getAbilities() {
             };
             abilitiesData.push(abilityDetail);
         }
-        pokemonObject[currentIndex].abilities = abilitiesData;
+        pokemonObject[ID].abilities = abilitiesData;
     }
 }
 
-function showStats() {
-    // statsRef.classList.add("red-underline");
+function showStats(pokemon) {
     dialogContentRef.innerHTML = "";
     updateDialogNav('stats');
-    pokemonObject[currentIndex].stats.forEach(pokeStat => {
+    pokemon.stats.forEach(pokeStat => {
         dialogContentRef.innerHTML += `
         <div class="dialog-stat-div">
             <p class="pokemon-stat-name">${getStatName(pokeStat.stat.name)}</p>
@@ -114,24 +114,30 @@ function showStats() {
 }
 
 async function aboutClick() {
-    await getAbilities();
-    await getDialogData();
+    const effectiveIndex = getEffectiveIndex();
+    await getAbilities(effectiveIndex);
+    await getDialogData(effectiveIndex);
     dialogContentRef.innerHTML = "";
     updateDialogNav('about');
-    loadDescription();
-    loadAbilities();
+    loadDescription(effectiveIndex);
+    loadAbilities(effectiveIndex);
 }
 
 async function evolutionClick() {
     dialogContentRef.innerHTML = `<div class="loader">Loading evolution...</div>`;
-    await getDialogData();
-    updateDialogNav('evolution')
-    loadEvolution();
+    const effectiveIndex = getEffectiveIndex();
+    updateDialogNav('evolution');
+    if (await getDialogData(effectiveIndex) === 'Eevee') {
+        return
+    }
+
+    loadEvolution(effectiveIndex);
 }
 
 function updateDialogNav(content) {
-    dialogContentRef.classList.remove('evo-content');
+    dialogContentRef.classList.remove('evolution-content');
     dialogContentRef.classList.remove('about-content');
+    dialogContentRef.classList.remove('stats-content');
     dialogContentRef.classList.add(`${content}-content`);
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
@@ -142,20 +148,33 @@ function updateDialogNav(content) {
     });
 }
 
-function loadEvolution() {
-    let evolutionChain = pokemonObject[currentIndex].evoChain;
+function loadEvolution(ID) {
+    let evolutionChain = pokemonObject[ID].evoChain;
+    dialogContentRef.classList.add('evo-content');
+    if (evolutionChain.length == 1) {
+        dialogContentRef.innerHTML = '<h4>This Pokemon has no evolution</h4>'
+    }
     dialogContentRef.innerHTML = evolutionChain.map((evoIndex, i) => {
         let html = `<img class="evo-sprites" title="${stringToCapital(pokemonObject[evoIndex.id].name)}" src="${pokemonObject[evoIndex.id].sprite}">`;
         if (i < evolutionChain.length - 1) {
             let nextStep = evolutionChain[i + 1];
             let conditionText = "";
+            if (nextStep.trigger) {
+                conditionText += `${stringToCapital(nextStep.trigger)}`;
+            }
+            if (nextStep.minHappiness) {
+                conditionText += `Happiness ${nextStep.minHappiness}`;
+            }
+            if (nextStep.heldItem) {
+                conditionText += stringToCapital(nextStep.heldItem.name.replace("-", " "));
+            }
             if (nextStep.minLevel) {
                 conditionText = `Lvl ${nextStep.minLevel}`;
-            } else if (nextStep.item) {
+            }
+            if (nextStep.item) {
                 conditionText = stringToCapital(nextStep.item.replace("-", " "));
-            } else if (nextStep.minHappiness) {
-                conditionText = `Happiness ${nextStep.minHappiness}`;
-            } else {
+            }
+            if (conditionText == "") {
                 conditionText = "?";
             }
             html += `
@@ -167,17 +186,21 @@ function loadEvolution() {
 
         return html;
     }).join('');
-    dialogContentRef.classList.add('evo-content');
 }
 
-async function getDialogData() {
-     let speciesAPI = ""
-    if (!pokemonObject[currentIndex].flavorText || !pokemonObject[currentIndex].evoChain) {
-        speciesAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIndex}/`)).json();   
-        pokemonObject[currentIndex].flavorText = getDescription(speciesAPI.flavor_text_entries);
+async function getDialogData(ID) {
+    let speciesAPI = ""
+    if (!pokemonObject[ID].flavorText || !pokemonObject[ID].evoChain) {
+        speciesAPI = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${ID}/`)).json();
+        pokemonObject[ID].flavorText = getDescription(speciesAPI.flavor_text_entries);
     }
-    if (!pokemonObject[currentIndex].evoChain) {
+    if (!pokemonObject[ID].evoChain) {
         let evoAPI = await (await fetch(`${speciesAPI.evolution_chain.url}`)).json();
+        // console.log(evoAPI);
+        if (evoAPI.chain.evolves_to.length > 5) {
+            getEeveeEvo(evoAPI.chain.evolves_to);
+            return 'Eevee';
+        }
         let evoArray = getEvoArray(evoAPI.chain);
         for (const pokemon of evoArray) {
             if (!pokemonObject[pokemon.id]) {
@@ -201,13 +224,29 @@ function getEvoArray(chain, pokemonIDs = []) {
         minHappiness: chain.evolution_details.length > 0
             ? chain.evolution_details[0].min_happiness
             : null,
-
+        heldItem: chain.evolution_details.length > 0
+            ? chain.evolution_details[0].held_item
+            : null,
+        trigger: (chain.evolution_details.length > 0 && chain.evolution_details[0].trigger.name != 'level-up')
+            ? chain.evolution_details[0].trigger.name
+            : null,
     };
     pokemonIDs.push(currentStep);
     if (chain.evolves_to.length > 0) {
         getEvoArray(chain.evolves_to[0], pokemonIDs);
     }
     return pokemonIDs;
+}
+
+async function getEeveeEvo(pokemonIDs) {
+    console.log('EeveeArray', pokemonIDs);
+    let eeveeArray = [];
+    for (let i = 0; i < pokemonIDs.length; i++) {
+        let evolutionID = cutOutIndex(pokemonIDs[i].species.url)
+        eeveeArray.push(evolutionID);
+        await fetchPokemon(evolutionID);
+    } 
+    loadEeveeTemplate(eeveeArray);
 }
 
 document.addEventListener('keydown', function (event) {
@@ -222,20 +261,22 @@ document.addEventListener('keydown', function (event) {
     }
 })
 
-function checkSearchActive() {
-
+function getEffectiveIndex() {
+    if (searchState) {
+        return searchArray[currentIndex];
+    }
+    return currentIndex;
 }
 
 function swipeLeft() {
+    currentIndex -= 1;
     if (searchState) {
-        currentSearchIndex -= 1;
-        if (currentSearchIndex == -1) {
-            currentSearchIndex = searchArray.length - 1;
+        if (currentIndex == -1) {
+            currentIndex = searchArray.length - 1;
         }
-        loadDialog(pokemonObject[searchArray[currentSearchIndex]]);
+        loadDialog(pokemonObject[searchArray[currentIndex]]);
         return
     }
-    currentIndex -= 1;
     if (currentIndex == 1) {
         document.getElementById('left-arrow').style.visibility = "hidden";
     }
@@ -243,15 +284,14 @@ function swipeLeft() {
 }
 
 async function swipeRight() {
+    currentIndex += 1;
     if (searchState) {
-        currentSearchIndex += 1;
-        if (currentSearchIndex == searchArray.length) {
-            currentSearchIndex = 0;
+        if (currentIndex == searchArray.length) {
+            currentIndex = 0;
         }
-        loadDialog(pokemonObject[searchArray[currentSearchIndex]]);
+        loadDialog(pokemonObject[searchArray[currentIndex]]);
         return
     }
-    currentIndex += 1;
     if (currentNumberPokemon == currentIndex) {
         getMorePokemon();
     }
