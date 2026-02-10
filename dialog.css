@@ -7,6 +7,11 @@
     padding: 0px;
 }
 
+.no-scroll {
+    overflow: hidden;
+    /* padding-right: 15px;  */
+}
+
 .pokedex-top-img {
     width: 100%;
 }

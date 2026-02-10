@@ -7,67 +7,6 @@ let searchState = false;
 let currentSearchResults = [];
 let searchArray = [];
 
-// async function loadAPI() {
-//     let pokemonFullAPI = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1024`);
-//     let pokemonFullAPIAsJson = await pokemonFullAPI.json();
-//     console.log("Full", pokemonFullAPIAsJson);
-//     let pokemonAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/2`);
-//     let pokemonAPIAsJson = await pokemonAPI.json();
-//     console.log(pokemonAPIAsJson);
-//     loadSpeciesAPI();
-//     loadEvoAPI();
-//     load134API();
-//     loadSpecies134API();
-//     loadEvo14API()
-//     loadEvo134API();
-// }
-
-async function loadSpeciesAPI() {
-    let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/133`);
-    let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
-    console.log("Species133", pokemonSpeciesAPIAsJson);
-    loadEvoAPI();
-    loadSpecies134API();
-    loadEvo14API();
-    loadEvo10API();
-}
-
-async function loadEvoAPI() {
-    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/67/`);
-    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-    console.log("EvoChainEevee", pokemonEvoAPIAsJson);
-}
-
-// async function load134API() {
-//     let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/pokemon/30/`);
-//     let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-//     console.log("30", pokemonEvoAPIAsJson);
-// }
-
-async function loadSpecies134API() {
-    let pokemonSpeciesAPI = await fetch(`https://pokeapi.co/api/v2/pokemon-species/113/`);
-    let pokemonSpeciesAPIAsJson = await pokemonSpeciesAPI.json();
-    console.log("Species113", pokemonSpeciesAPIAsJson);
-}
-
-async function loadEvo14API() {
-    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/51/`);
-    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-    console.log("EvoChain51", pokemonEvoAPIAsJson);
-}
-
-async function loadEvo10API() {
-    let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/10/`);
-    let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-    console.log("EvoChain510", pokemonEvoAPIAsJson);
-}
-
-// async function loadEvo134API() {
-//     let pokemonEvoAPI = await fetch(`https://pokeapi.co/api/v2/evolution-chain/67/`);
-//     let pokemonEvoAPIAsJson = await pokemonEvoAPI.json();
-//     console.log("EvoChainEevee", pokemonEvoAPIAsJson);
-// }
-
 async function getMorePokemon() {
     document.body.classList.add('disable-interaction');
     const pantomimeRef = document.getElementById('pantomimeID');

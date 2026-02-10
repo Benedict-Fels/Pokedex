@@ -14,62 +14,67 @@
     <script defer src="template.js"></script>
 </head>
 
-<body onload="getMorePokemon(), preloadSearchList(), loadSpeciesAPI()">
-    <header>
-        <img class="pokedex-logo" src="./assets/Logos/Pokédex_logo.png" alt="Pokedex logo">
-        <input id="inputID" onabort="loadCurrentPokemon()" oninput="searchPokemon(this.value)" type="text"
-            placeholder="Search..."><img class="magnifying-glass" src="./assets/magnifying-glass.png"
-            alt="search icon"></input>
-    </header>
-    <section class="pokemon-section">
-        <div id="content" class="content"></div>
-        <button onclick="getMorePokemon()">Show more</button>
-        <img id="pantomimeID" class="pantomime-loading display-none" src="./assets/pantomime.gif" alt="Pantomime GIF">
-    </section>
+<body onload="getMorePokemon(), preloadSearchList()">
+    <div class="wrapper">
+        <header>
+            <img class="pokedex-logo" src="./assets/Logos/Pokédex_logo.png" alt="Pokedex logo">
+            <input id="inputID" onabort="loadCurrentPokemon()" oninput="searchPokemon(this.value)" type="text"
+                placeholder="Search..."><img class="magnifying-glass" src="./assets/magnifying-glass.png"
+                alt="search icon"></input>
+        </header>
+        <section class="pokemon-section">
+            <div id="content" class="content"></div>
+            <button onclick="getMorePokemon()">Show more</button>
+            <img id="pantomimeID" class="pantomime-loading display-none" src="./assets/pantomime.gif"
+                alt="Pantomime GIF">
+        </section>
 
-    <section class="dialog-section">
-        <dialog id="dialogID" onclick="closeDialog()">
-            <div id="dialogDivID" class="dialog-div">
-                <div class="dialog-header">
-                    <img class="pokedex-top-img" src="./assets/pokedex-full-top-without-edge-removebg-preview.png"
-                        alt="pokedex top">
-                    <img id="closeButton" class="close-button" onmousedown="registerClickXButton()"
-                        onmouseup="closeDialog()" src="./assets/Logos/close-button.svg" alt="close dialog">
-                    <p class="dialog-poke-name" id="dialogpokeNameID"></p>
-                    <div class="dialog-types-div" id="dialog-pokemon-typesID"> </div>
+        <section class="dialog-section">
+            <dialog id="dialogID" onclick="closeDialog()">
+                <div id="dialogDivID" class="dialog-div">
+                    <div class="dialog-header">
+                        <img class="pokedex-top-img" src="./assets/pokedex-full-top-without-edge-removebg-preview.png"
+                            alt="pokedex top">
+                        <img id="closeButton" class="close-button" onmousedown="registerClickXButton()"
+                            onmouseup="closeDialog()" src="./assets/Logos/close-button.svg" alt="close dialog">
+                        <p class="dialog-poke-name" id="dialogpokeNameID"></p>
+                        <div class="dialog-types-div" id="dialog-pokemon-typesID"> </div>
+                    </div>
+                    <div class="dialog-grey-outline">
+                        <div class="dialog-flex">
+                            <div id="dialogPicID" class="dialog-pic"></div>
+                            <nav class="dialog-nav">
+                                <p id="statsID" class="nav-item red-underline"
+                                    onclick="showStats(pokemonObject[getEffectiveIndex()])">Stats</p>
+                                <p id="aboutID" class="nav-item" onclick="aboutClick()">About</p>
+                                <p id="evolutionID" class="nav-item" onclick="evolutionClick()">Evolution</p>
+                            </nav>
+                        </div>
+                        <div id="dialog-contentID" class="dialog-content">
+                        </div>
+                        <div class="dialog-footer">
+                            <svg id="left-arrow" class="arrow left" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1"
+                                viewBox="0 0 512.003 512.003" xml:space="preserve">
+                                <path onclick="swipeLeft()"
+                                    d="M507.284,248.364L12.35,0.898C8.894-0.826,4.721-0.007,2.153,2.86c-2.56,2.884-2.867,7.125-0.759,10.351l159.07,242.79    L1.393,498.792c-2.108,3.226-1.801,7.467,0.759,10.351c1.664,1.86,4.002,2.859,6.383,2.859c1.289,0,2.594-0.29,3.814-0.896    l494.933-247.467c2.893-1.451,4.719-4.403,4.719-7.637S510.176,249.815,507.284,248.364z" />
+                            </svg>
+                            <svg class="arrow" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1"
+                                viewBox="0 0 512.003 512.003" xml:space="preserve">
+                                <path onclick="swipeRight()"
+                                    d="M507.284,248.364L12.35,0.898C8.894-0.826,4.721-0.007,2.153,2.86c-2.56,2.884-2.867,7.125-0.759,10.351l159.07,242.79    L1.393,498.792c-2.108,3.226-1.801,7.467,0.759,10.351c1.664,1.86,4.002,2.859,6.383,2.859c1.289,0,2.594-0.29,3.814-0.896    l494.933-247.467c2.893-1.451,4.719-4.403,4.719-7.637S510.176,249.815,507.284,248.364z" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="dialog-grey-outline">
-                    <div class="dialog-flex">
-                        <div id="dialogPicID" class="dialog-pic"></div>
-                        <nav class="dialog-nav">
-                            <p id="statsID" class="nav-item red-underline" onclick="showStats(pokemonObject[getEffectiveIndex()])">Stats</p>
-                            <p id="aboutID" class="nav-item" onclick="aboutClick()">About</p>
-                            <p id="evolutionID" class="nav-item" onclick="evolutionClick()">Evolution</p>
-                        </nav>
-                    </div>
-                    <div id="dialog-contentID" class="dialog-content">
-                    </div>
-                    <div class="dialog-footer">
-                        <svg id="left-arrow" class="arrow left" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1"
-                            viewBox="0 0 512.003 512.003" xml:space="preserve">
-                            <path onclick="swipeLeft()"
-                                d="M507.284,248.364L12.35,0.898C8.894-0.826,4.721-0.007,2.153,2.86c-2.56,2.884-2.867,7.125-0.759,10.351l159.07,242.79    L1.393,498.792c-2.108,3.226-1.801,7.467,0.759,10.351c1.664,1.86,4.002,2.859,6.383,2.859c1.289,0,2.594-0.29,3.814-0.896    l494.933-247.467c2.893-1.451,4.719-4.403,4.719-7.637S510.176,249.815,507.284,248.364z" />
-                        </svg>
-                        <svg class="arrow" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                            fill="#000000" version="1.1" viewBox="0 0 512.003 512.003" xml:space="preserve">
-                            <path onclick="swipeRight()"
-                                d="M507.284,248.364L12.35,0.898C8.894-0.826,4.721-0.007,2.153,2.86c-2.56,2.884-2.867,7.125-0.759,10.351l159.07,242.79    L1.393,498.792c-2.108,3.226-1.801,7.467,0.759,10.351c1.664,1.86,4.002,2.859,6.383,2.859c1.289,0,2.594-0.29,3.814-0.896    l494.933-247.467c2.893-1.451,4.719-4.403,4.719-7.637S510.176,249.815,507.284,248.364z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </dialog>
-    </section>
-    <footer>
-        <img class="DA-logo" src="./assets/Logos/DA_Logo.png" alt="Developer Akademie Logo">
-        <p>© 2023 Developer Akademie GmbH</p>
-    </footer>
+            </dialog>
+        </section>
+        <footer>
+            <img class="DA-logo" src="./assets/Logos/DA_Logo.png" alt="Developer Akademie Logo">
+            <p>© 2023 Developer Akademie GmbH</p>
+        </footer>
+    </div>
 </body>
 
 </html>
