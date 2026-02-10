@@ -119,7 +119,7 @@ async function getDialogData(ID) {
         let evoAPI = await (await fetch(`${speciesAPI.evolution_chain.url}`)).json();
         // console.log(evoAPI);
         if (evoAPI.chain.evolves_to.length > 5) {
-            getEeveeEvo(evoAPI.chain.evolves_to);
+            await getEeveeEvo(evoAPI.chain.evolves_to);
             return 'Eevee';
         }
         let evoArray = getEvoArray(evoAPI.chain);
@@ -197,8 +197,8 @@ async function swipeRight() {
         loadDialog(pokemonObject[searchArray[currentIndex]]);
         return
     }
-    if (currentNumberPokemon == currentIndex) {
-        getMorePokemon();
+    if (currentNumberPokemon == currentIndex - 1) {
+        await getMorePokemon();
     }
     if (currentIndex == 2) {
         document.getElementById('left-arrow').style.visibility = "visible";

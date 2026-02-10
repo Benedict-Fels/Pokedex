@@ -197,6 +197,7 @@ h2 {
     height: 64px;
     object-fit: contain;
     filter: drop-shadow(15px 15px 20px rgba(0, 0, 0, 0.9));
+    z-index: 2;
 }
 
 .evo-arrow-container {
@@ -205,7 +206,6 @@ h2 {
     align-items: center;
 }
 
-/*  */
 .eevee-compact-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -218,14 +218,6 @@ h2 {
     flex-grow: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
-
-.evo-item {
-    position: relative;
-    /* Wichtig für die Positionierung des Pfeils */
-    display: flex;
-    flex-direction: column;
     align-items: center;
 }
 
@@ -256,15 +248,6 @@ h2 {
     align-items: center;
 }
 
-.eevee-evolution {
-    height: 64px;
-    object-fit: contain;
-    filter: drop-shadow(15px 15px 20px rgba(0, 0, 0, 0.9));
-    z-index: 2;
-}
-
-
-/*  */
 .dialog-image {
     flex: 1;
     display: flex;
@@ -361,6 +344,10 @@ h2 {
 
     .evo-sprites {
         height: 50px;
+    }
+
+    .eevee-compact-grid{
+        width: 240px;
     }
 
     .arrow {

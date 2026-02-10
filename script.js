@@ -1,6 +1,7 @@
 
 const pokemonLocation = document.getElementById("content");
 const dialogContentRef = document.getElementById("dialog-contentID");
+const showMoreButtonRef = document.getElementById('getMoreButton');
 let pokemonObject = {};
 let currentNumberPokemon = 0;
 let searchState = false;
@@ -54,12 +55,14 @@ async function searchPokemon(searchInput) {
     if (searchTerm.length === 0) {
         loadCurrentPokemon();
         searchState = false;
+        showMoreButtonRef.classList.remove("display-none");
         return
     }
     if (searchTerm.length < 3) {
         return;
     }
     searchState = true;
+    showMoreButtonRef.classList.add("display-none");
     currentSearchResults = allPokemonSearchList.filter(p =>
         p.name.includes(searchTerm) || p.id.toString() === searchTerm
     );

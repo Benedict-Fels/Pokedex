@@ -7,7 +7,7 @@
     <title>Pokedex</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="dialog.css">
-    <link rel="icon" type="image/x-icon" href="./assets/Logos/DA_Logo.png">
+    <link rel="icon" type="image/x-icon" href="./assets/pokeball.png">
     <script defer src="script.js"></script>
     <script defer src="dialog.js"></script>
     <script defer src="modify.js"></script>
@@ -24,7 +24,7 @@
         </header>
         <section class="pokemon-section">
             <div id="content" class="content"></div>
-            <button onclick="getMorePokemon()">Show more</button>
+            <button id="getMoreButton" onclick="getMorePokemon()">Show more</button>
             <img id="pantomimeID" class="pantomime-loading display-none" src="./assets/pantomime.gif"
                 alt="Pantomime GIF">
         </section>

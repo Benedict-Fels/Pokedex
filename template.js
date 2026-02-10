@@ -110,12 +110,12 @@ function loadEeveeTemplate(eeveeArray) {
     let html2 = "";
     for (let i = 0; i < 4; i++) {
         html1 += `   <div class="eevee-evolution-div">
-                         <img class="eevee-evolution" title="${stringToCapital(pokemonObject[eeveeArray[i]].name)}" src="${pokemonObject[eeveeArray[i]].sprite}"></img>
+                         <img class="evo-sprites" title="${stringToCapital(pokemonObject[eeveeArray[i]].name)}" src="${pokemonObject[eeveeArray[i]].sprite}"></img>
                      </div>`
     }
     for (let i = 4; i < 8; i++) {
         html2 += `   <div class="eevee-evolution-div">
-                         <img class="eevee-evolution" title="${stringToCapital(pokemonObject[eeveeArray[i]].name)}" src="${pokemonObject[eeveeArray[i]].sprite}"></img>
+                         <img class="evo-sprites" title="${stringToCapital(pokemonObject[eeveeArray[i]].name)}" src="${pokemonObject[eeveeArray[i]].sprite}"></img>
                      </div>`
     }
     dialogContentRef.innerHTML = `
